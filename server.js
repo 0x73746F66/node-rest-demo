@@ -9,10 +9,12 @@ var express = require('express'),
         database : 'test'
     });
 
-app.use(express.bodyParser());
 app.use(function(req, res, next) {
     req.mysql = pool;
     next();
+});
+app.configure(function(){
+    app.use(express.bodyParser());
 });
 
 app.get('/list', tbl_list.get);

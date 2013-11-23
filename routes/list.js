@@ -8,7 +8,7 @@ exports.get = function(req,res){
                 err:    err.code
             });
         } else {
-            connection.query('SELECT * FROM '+req.params.table+' ORDER BY id DESC LIMIT 20', req.params.id, function(err, rows) {
+            connection.query('SELECT * FROM list ORDER BY id DESC LIMIT 20', req.params.id, function(err, rows) {
                 if (err) {
                     console.error(err);
                     res.statusCode = 500;
@@ -17,12 +17,16 @@ exports.get = function(req,res){
                         err:    err.code
                     });
                 } else {
-                    res.send({
-                        result: 'success',
-                        err:    '',
-                        json:   rows,
-                        length: rows.length
-                    });
+                    if (rows.length === 0){
+                        res.statusCode = 204;
+                    } else {
+                        res.send({
+                            result: 'success',
+                            err:    '',
+                            json:   rows,
+                            length: rows.length
+                        });
+                    }
                 }
                 connection.release();
             });
@@ -39,7 +43,7 @@ exports.find = function(req,res){
                 err:    err.code
             });
         } else {
-            connection.query('SELECT * FROM '+req.params.table+' WHERE id = ?', req.params.id, function(err, rows) {
+            connection.query('SELECT * FROM list WHERE id = ?', req.params.id, function(err, rows) {
                 if (err) {
                     console.error(err);
                     res.statusCode = 500;
@@ -48,13 +52,17 @@ exports.find = function(req,res){
                         err:    err.code
                     });
                 } else {
-                    res.send({
-                        result: 'success',
-                        err:    '',
-                        id:     req.params.id,
-                        json:   rows[0],
-                        length: 1
-                    });
+                    if (rows.length === 0){
+                        res.statusCode = 204;
+                    } else {
+                        res.send({
+                            result: 'success',
+                            err:    '',
+                            id:     req.params.id,
+                            json:   rows[0],
+                            length: 1
+                        });
+                    }
                     connection.release();
                 }
             });
@@ -71,7 +79,7 @@ exports.ins = function(req,res){
                 err:    err.code
             });
         } else {
-            connection.query('INSERT INTO '+req.params.table+' SET ?', req.body, function(err, result) {
+            connection.query('INSERT INTO list SET ?', req.body, function(err, result) {
                 if (err) {
                     console.error(err);
                     res.statusCode = 500;
@@ -101,7 +109,7 @@ exports.upd = function(req,res){
                 err:    err.code
             });
         } else {
-            connection.query('UPDATE '+req.params.table+' SET ? WHERE id='+connection.escape(req.params.id), req.body, function(err) {
+            connection.query('UPDATE list SET ? WHERE id='+connection.escape(req.params.id), req.body, function(err) {
                 if (err) {
                     console.error(err);
                     res.statusCode = 500;
@@ -110,7 +118,7 @@ exports.upd = function(req,res){
                         err:    err.code
                     });
                 } else {
-                    connection.query('SELECT * FROM '+req.params.table+' WHERE id = ?', req.params.id, function(err, rows) {
+                    connection.query('SELECT * FROM list WHERE id = ?', req.params.id, function(err, rows) {
                         if (err) {
                             console.error(err);
                             res.statusCode = 500;
@@ -144,7 +152,7 @@ exports.del = function(req,res){
                 err:    err.code
             });
         } else {
-            connection.query('DELETE FROM '+req.params.table+' WHERE id = ?', req.params.id, function(err) {
+            connection.query('DELETE FROM list WHERE id = ?', req.params.id, function(err) {
                 if (err) {
                     console.error(err);
                     res.statusCode = 500;
