@@ -1,7 +1,7 @@
 var express = require('express'),
     app     = express(),
     mysql   = require('mysql'),
-    bcrypt = require('bcrypt'),
+    //bcrypt = require('bcrypt'),
     tbl_list = require('./routes/list'),
     tbl_user = require('./routes/user'),
     pool = mysql.createPool({
@@ -13,11 +13,20 @@ var express = require('express'),
 
 app.use(function(req, res, next) {
     req.mysql   = pool;
-    req.bcrypt  = bcrypt;
+    //req.bcrypt  = bcrypt;
     next();
 });
+// all environments
 app.configure(function(){
-    app.use(express.bodyParser());
+    app.use(express.bodyParser()); //@todo make this load only for POST
+});
+// development only
+app.configure('development', function(){
+    //app.set('db uri', 'localhost/dev');
+});
+// production only
+app.configure('production', function(){
+    //app.set('db uri', 'n.n.n.n/prod');
 });
 
 app.get('/list', tbl_list.get);
