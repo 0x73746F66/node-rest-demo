@@ -12,7 +12,8 @@
         "express": ">= 3.3.x",
         "socket.io": ">= 0.9.x",
         "mysql": ">= 0.2.x",
-        "bcrypt": ">= 0.5.x"
+        //"bcrypt": ">= 0.5.x",
+        "memoizee": "0.2.6"
     },
     "engines": {
         "node": ">= 0.10",
