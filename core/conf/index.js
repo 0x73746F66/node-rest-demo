@@ -1,29 +1,17 @@
-var conf = {
-    production:     {
-        db:             {
-            mysql:          {
-                host        : '',
-                user        : '',
-                password    : '',
-                database    : ''
-            }
-        },
+var tool = require('cloneextend'),
+    conf = {};
+    conf.production = {
         application:    {
             errorHandler: {},
-            salt        : '',
             username    : 'demo',
-            password    : 'Que62msjiDU0b2yYvi2zbavw', // bEdESpuGU3rewasaphEfaKedR7r=M#fU
-            realm       : 'Authenticated',
-            routes      : ['list'],
-            middleware  : ['compress','json','urlencoded','logger']
+            password    : 'Que62msjiDU0b2yYvi2zbavw' // bEdESpuGU3rewasaphEfaKedR7r=M#fU
         },
         server:         {
-            host        : '',
-            port        : '8080'
+            port        : '80'
         }
-    },
-    development:    {
-    db:                 {
+    };
+    conf.development = {
+        db:             {
             mysql:          {
                 host        : 'localhost',
                 user        : 'test',
@@ -32,7 +20,11 @@ var conf = {
             }
         },
         application:    {
-            errorHandler: { dumpExceptions: true, showStack: true },
+            errorHandler: { dumpExceptions: true, showStack: true }
+        }
+    };
+    conf.defaults = {
+        application:    {
             salt        : '1234567890QWERTY',
             username    : 'clangton',
             password    : 'GR+adJAdWOxFQMLFHAWPig==',
@@ -44,31 +36,9 @@ var conf = {
             host        : 'localhost',
             port        : 3000
         }
-    },
-    default:        {
-        db:             {
-            mysql:          {
-                host        : 'localhost',
-                user        : 'root',
-                password    : '',
-                database    : ''
-            }
-        },
-        application:    {
-            errorHandler: { dumpExceptions: true, showStack: true },
-            salt        : 'default',
-            username    : 'default',
-            password    : 'password',
-            realm       : 'Authenticated',
-            routes      : ['list'],
-            middleware  : ['compress','json','urlencoded','logger']
-        },
-        server:         {
-            host        : 'localhost',
-            port        : '0.0.0.0'
-        }
-    }
-};
-exports.get = function get(env){
-    return conf[env] || conf.default;
+    };
+
+exports.get = function get(env, obj){
+    var settings = tool.cloneextend(conf.defaults, conf[env]);
+    return ('object' === typeof obj) ? tool.cloneextend(settings, obj) : settings;
 }
